@@ -1,0 +1,88 @@
+=====
+inipp
+=====
+:Homepage: http://projects.wagner-flo.net/inipp/
+:Author: Florian Wagner <florian@wagner-flo.net>
+:Realease: version 0.1
+
+About
+=====
+inipp is a minimalistic ini style config parser for C++. It is contained
+in a single header file which can be added to a programs source code. It
+is intended for tools that need to read and parse (but not write) ini
+style files and do not want to add a dependency to one of the more
+advanced config parsing libraries.
+
+Installation and Dependencies
+=============================
+Copy the ``inipp.hh`` header to a directory of your choice within the
+sources of the software you intend to use inipp with. inipp requires
+a C++ standard library with basic stream and string support and a C++
+compiler able to compile said standard library and a one additional
+class.
+
+Example usage
+=============
+To read a config file create an instance of the *inipp::inifile* class
+and pass it an *std::ifstream* object::
+ 
+ #include "inipp.hh"
+ #include <fstream>
+
+ [...]
+
+ std::ifstream cfstream("config.ini");
+ inipp::inifile cfile(cfstream);
+
+The constructor of *inipp::inifile* will read the given stream line
+by line and parse it contents according to a set of rules:
+
+- Empty lines, lines with only whitespace in them and lines starting
+  a ``#`` character (and possibly whitespace before that) are completely
+  ignored.
+
+- Lines starting with a ``[`` character and ending with a ``]``
+  (ignoring whitespace before and after) are taken as starting
+  definitions of sections.
+
+- Lines containing a ``=`` character and some none whitespace text
+  before and after that character are assumed to be key, value
+  pairs and are added to the current section. Whitespace next to
+  the equal sign is trimmed.
+
+- Any other lines are silently ignored.
+
+Assuming a configuration file named ``config.ini`` with the following
+content::
+
+ everything = borked
+ inipp = may not be borked
+
+ [rule the world]
+ use = lolcats en masse
+
+ [sp3c14|_ c#4r4c73r2]
+ do = work in inipp
+
+Querying all these key, value pairs is as easy as calling the *get*
+method on the *inipp::inifile* object::
+
+ std::cout << "everything: " << cfile.get("everything")
+           << std::endl
+           << "inipp: " << cfile.get("inipp")
+           << std::endl
+           << "rule the world / use: " << cfile.get("rule the world", "use")
+           << std::endl
+           << sp3c14|_ c#4r4c73r2 / do: "
+                                  << cfile.get("sp3c14|_ c#4r4c73r2", "do")
+           << std::endl;
+
+Changelog
+=========
+
+           
+
+..
+   Local Variables:
+   mode: rst
+   End:
