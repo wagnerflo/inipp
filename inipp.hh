@@ -73,7 +73,12 @@ namespace inipp {
 
           // section?
           if(line[0] == '[') {
-            cursec = &this->_sections[line.substr(1, line.size() - 2)];
+            if(line[line.size() - 1] != ']') {
+              continue;
+            }
+            
+            line = trim(line.substr(1, line.size() - 2));
+            cursec = &this->_sections[line];
             continue;
           }
           
