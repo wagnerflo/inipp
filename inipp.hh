@@ -1,4 +1,4 @@
-/* inipp.hh - minimal ini file parser class in single header file
+/* inipp.hh - minimalistic ini file parser class in single header file
 
 Copyright (c) 2009, Florian Wagner <florian@wagner-flo.net>.
 All rights reserved.
@@ -34,96 +34,109 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 #include <fstream>
 #include <stdexcept>
 
-namespace inipp {
+namespace inipp
+{
   
-  inline std::string trim(const std::string& str);
-  inline bool split(const std::string& in, const std::string& sep,
-                    std::string& first, std::string& second);
+  std::string __version__ = "0.1";
 
-  class entry_error : public std::runtime_error {
+  class unknown_entry_error : public std::runtime_error
+  {
     public:
-      entry_error(const std::string& msg) 
-        : std::runtime_error(msg) {
-        /* empty */
-      };
+      unknown_entry_error(const std::string& key)
+        : std::runtime_error("Unknown sectionless entry '" + key + "'.")
+      { /* empty */ };
+
+      unknown_entry_error(const std::string& key, const std::string& section)
+        : std::runtime_error("Unknown entry '" + key + "' in section '" +
+                             section + "'.")
+      { /* empty */ };
   };
   
-  class section_error : public std::runtime_error {
+  class unknown_section_error : public std::runtime_error
+  {
     public:
-      section_error(const std::string& msg) 
-        : std::runtime_error(msg) {
-        /* empty */
-      };
+      unknown_section_error(const std::string& section) 
+        : std::runtime_error("Unknown section '" + section + "' requested.")
+      { /* empty */ };
   };
 
-  class inifile {
+  class inifile
+  {
     public:
-      inifile(std::ifstream& infile) {
-        std::map<std::string,std::string>* cursec = &this->_defaultsection;
-        std::string line;
-
-        while(std::getline(infile, line)) {
-          // trim line
-          line = trim(line);
-          
-          // ignore empty lines and comments
-          if(line == "" || line[0] == '#') {
-            continue;
-          }
-
-          // section?
-          if(line[0] == '[') {
-            if(line[line.size() - 1] != ']') {
-              continue;
-            }
-            
-            line = trim(line.substr(1, line.size() - 2));
-            cursec = &this->_sections[line];
-            continue;
-          }
-          
-          // entry: split by "="
-          std::string key;
-          std::string value;
-
-          // ignore invalid lines
-          if(!split(line, "=", key, value)) {
-            continue;
-          }
-          
-          // then trim and set
-          (*cursec)[trim(key)] = trim(value);
-        }
-      };
-      
-      std::string get(const std::string& name,
-                      const std::string& key) {
-        if(!this->_sections.count(name)) {
-          throw section_error("Unknown section '" + name + "' requested.");
-        }
-
-        if(!this->_sections[name].count(key)) {
-          throw entry_error(
-                    "Unknown entry '" + key + "' in section '" + name + "'.");
-        }
-
-        return this->_sections[name][key];
-      };
-
-      std::string get(const std::string& key) {
-        if(!this->_defaultsection.count(key)) {
-          throw entry_error("Unknown sectionless entry '" + key + "'.");
-        }
-
-        return this->_defaultsection[key];
-      };
+      inifile(std::ifstream& infile);
+      std::string get(const std::string& section, const std::string& key);
+      std::string get(const std::string& key);
 
     protected:
       std::map<std::string,std::map<std::string,std::string> > _sections;
       std::map<std::string,std::string> _defaultsection;
+      
+      std::string _trim(const std::string& str);
+      bool _split(const std::string& in, const std::string& sep,
+                  std::string& first, std::string& second);
+
   };
 
-  inline std::string trim(const std::string& str) {
+  inifile::inifile(std::ifstream& infile) {
+    std::map<std::string,std::string>* cursec = &this->_defaultsection;
+    std::string line;
+
+    while(std::getline(infile, line)) {
+      // trim line
+      line = this->_trim(line);
+          
+      // ignore empty lines and comments
+      if(line == "" || line[0] == '#') {
+        continue;
+      }
+
+      // section?
+      if(line[0] == '[') {
+        if(line[line.size() - 1] != ']') {
+          continue;
+        }
+            
+        line = this->_trim(line.substr(1, line.size() - 2));
+        cursec = &this->_sections[line];
+        continue;
+      }
+          
+      // entry: split by "="
+      std::string key;
+      std::string value;
+
+      // ignore invalid lines
+      if(!this->_split(line, "=", key, value)) {
+        continue;
+      }
+          
+      // then trim and set
+      (*cursec)[this->_trim(key)] = this->_trim(value);
+    }
+  }
+
+  std::string inifile::get(const std::string& section,
+                           const std::string& key) {
+    if(!this->_sections.count(section)) {
+      throw unknown_section_error(section);
+    }
+
+    if(!this->_sections[section].count(key)) {
+      throw unknown_entry_error(section, key);
+    }
+
+    return this->_sections[section][key];
+  }
+
+  std::string inifile::get(const std::string& key) {
+    if(!this->_defaultsection.count(key)) {
+      throw unknown_entry_error(key);
+    }
+    
+    return this->_defaultsection[key];
+  };
+  
+  inline std::string inifile::_trim(const std::string& str) {
     size_t startpos = str.find_first_not_of(" \t");
     size_t endpos = str.find_last_not_of(" \t");
     
@@ -136,8 +149,8 @@ namespace inipp {
     return str.substr(startpos, endpos - startpos + 1);
   }
 
-  inline bool split(const std::string& in, const std::string& sep,
-                    std::string& first, std::string& second) {
+  inline bool inifile::_split(const std::string& in, const std::string& sep,
+                              std::string& first, std::string& second) {
     size_t eqpos = in.find(sep);
     
     if(eqpos == std::string::npos) {

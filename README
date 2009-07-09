@@ -43,7 +43,8 @@ by line and parse it contents according to a set of rules:
 
 - Lines starting with a ``[`` character and ending with a ``]``
   (ignoring whitespace before and after) are taken as starting
-  definitions of sections.
+  definitions of sections. Section names are trimmed (``[a]`` is
+  equal to ``[ a ]``).
 
 - Lines containing a ``=`` character and some none whitespace text
   before and after that character are assumed to be key, value
@@ -59,7 +60,7 @@ content::
  inipp = may not be borked
 
  [rule the world]
- use = lolcats en masse
+ use lolcats = en masse
 
  [sp3c14|_ c#4r4c73r2]
  do = work in inipp
@@ -71,7 +72,8 @@ method on the *inipp::inifile* object::
            << std::endl
            << "inipp: " << cfile.get("inipp")
            << std::endl
-           << "rule the world / use: " << cfile.get("rule the world", "use")
+           << "rule the world / use: " << cfile.get("rule the world",
+                                                    "use lolcats")
            << std::endl
            << sp3c14|_ c#4r4c73r2 / do: "
                                   << cfile.get("sp3c14|_ c#4r4c73r2", "do")
@@ -80,6 +82,9 @@ method on the *inipp::inifile* object::
 Changelog
 =========
 
+v0.1
+----
+* The very first version.
            
 
 ..
