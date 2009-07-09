@@ -60,6 +60,14 @@ namespace inipp
       { /* empty */ };
   };
 
+  class syntax_error : public std::runtime_error
+  {
+    public:
+      syntax_error(const std::string& msg) 
+        : std::runtime_error(msg)
+      { /* empty */ };
+  };
+
   class inifile
   {
     public:
@@ -93,7 +101,8 @@ namespace inipp
       // section?
       if(line[0] == '[') {
         if(line[line.size() - 1] != ']') {
-          continue;
+          throw syntax_error("The section '" + line +
+                             "' is missing a closing bracket.");
         }
             
         line = this->_trim(line.substr(1, line.size() - 2));
@@ -107,7 +116,7 @@ namespace inipp
 
       // ignore invalid lines
       if(!this->_split(line, "=", key, value)) {
-        continue;
+        throw syntax_error("The line '" + line + "' is undecidable.");
       }
           
       // then trim and set
