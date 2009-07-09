@@ -5,9 +5,10 @@
 
 BOOST_AUTO_TEST_CASE( sunshine )
 {
-  std::ifstream cstream("tests-sunshine.cfg");
+  std::ifstream cstream("tests-sunshine.conf");
   inipp::inifile cfile(cstream);
 
+  // correct queries
   BOOST_REQUIRE_EQUAL(cfile.get("everything"),
                       "borked");
   BOOST_REQUIRE_EQUAL(cfile.get("inipp"),
@@ -16,4 +17,30 @@ BOOST_AUTO_TEST_CASE( sunshine )
                       "en masse");
   BOOST_REQUIRE_EQUAL(cfile.get("sp3c14|_ c#4r4c73r2", "do"),
                       "work in inipp");
+  BOOST_REQUIRE_EQUAL(cfile.get("whitespace aplenty", "these are double"),
+                      "= signs");
+
+  // queries supposed to throw up
+  BOOST_REQUIRE_THROW(cfile.get("nothing"), inipp::unknown_entry_error);
+  BOOST_REQUIRE_THROW(cfile.get("rule the world", "use loldogs"),
+                      inipp::unknown_entry_error);
+  BOOST_REQUIRE_THROW(cfile.get("normal characters", "work in inipp"),
+                      inipp::unknown_section_error);
+  BOOST_REQUIRE_THROW(cfile.get("everything = borked"),
+                      inipp::unknown_entry_error);
+}
+
+BOOST_AUTO_TEST_CASE( malformed )
+{
+  // we use a single ifstream
+  std::ifstream cstream("tests-malformed.conf");
+  
+  // The test config has two lines with distinct errors on them. So we
+  // construct a inipp::inifile twice without rewinding the ifstream
+  // in between. Both times an error should be thrown.
+  BOOST_REQUIRE_THROW(inipp::inifile cfile(cstream), inipp::syntax_error);
+  BOOST_REQUIRE_THROW(inipp::inifile cfile(cstream), inipp::syntax_error);
+
+  // But no error afterwards.
+  BOOST_REQUIRE_NO_THROW(inipp::inifile cfile(cstream));
 }

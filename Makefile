@@ -1,6 +1,5 @@
-
-check: tests
+check: tests tests-*.conf
 	./tests
 
-tests: tests.cc
-	g++ -I. -o $@ $<
+tests: tests.cc inipp.hh
+	g++ -I. -o $@ tests.cc
