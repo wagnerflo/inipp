@@ -3,7 +3,8 @@ inipp
 =====
 :Homepage: http://projects.wagner-flo.net/inipp/
 :Author: Florian Wagner <florian@wagner-flo.net>
-:Realease: version 0.1
+:Release: v0.1
+:License: BSD 2-clause
 
 About
 =====
@@ -16,10 +17,10 @@ advanced config parsing libraries.
 Installation and Dependencies
 =============================
 Copy the ``inipp.hh`` header to a directory of your choice within the
-sources of the software you intend to use inipp with. inipp requires
-a C++ standard library with basic stream and string support and a C++
-compiler able to compile said standard library and a one additional
-class.
+sources of the software you intend to use inipp with. Compilation
+requires a C++ standard library with basic stream and string support
+and a C++ compiler able to compile said standard library and one
+additional class.
 
 Example usage
 =============
@@ -31,39 +32,48 @@ and pass it an *std::ifstream* object::
 
  [...]
 
- std::ifstream cfstream("config.ini");
+ std::ifstream cfstream("tests-sunshine.conf");
  inipp::inifile cfile(cfstream);
 
 The constructor of *inipp::inifile* will read the given stream line
 by line and parse it contents according to a set of rules:
 
-- Empty lines, lines with only whitespace in them and lines starting
-  a ``#`` character (and possibly whitespace before that) are completely
-  ignored.
+1. Empty lines, lines with only whitespace in them and lines starting a
+   ``#`` character (and possibly whitespace before that) are completely
+   ignored.
 
-- Lines starting with a ``[`` character and ending with a ``]``
-  (ignoring whitespace before and after) are taken as starting
-  definitions of sections. Section names are trimmed (``[a]`` is
-  equal to ``[ a ]``).
+2. Lines starting with a ``[`` character and ending with a ``]``
+   (ignoring whitespace before and after) are taken as starting
+   definitions of sections. Section names are trimmed (``[a]`` is
+   equal to ``[␣a␣]``). A missing closing braket makes *inipp*
+   throw a *inipp::syntax_error*.
 
-- Lines containing a ``=`` character and some none whitespace text
-  before and after that character are assumed to be key, value
-  pairs and are added to the current section. Whitespace next to
-  the equal sign is trimmed.
+3. Lines containing a ``=`` character and some none whitespace text
+   before and after that character are assumed to be key, value
+   pairs and are added to the current section. Whitespace next to
+   the equal sign is trimmed. Splitting is done on the first ``=``
+   found in the line, thus all following equal signs end up in the
+   value part.
 
-- Any other lines are silently ignored.
+4. Lines matching non of the previous conditions make *inipp*
+   throw a *initpp::syntax_error*.
 
-Assuming a configuration file named ``config.ini`` with the following
-content::
+Assuming a configuration file named ``tests-sunshine.conf`` with the
+following content::
 
+ # this is a comment with a = sign
+ 
  everything = borked
  inipp = may not be borked
-
+ 
  [rule the world]
  use lolcats = en masse
-
+ 
  [sp3c14|_ c#4r4c73r2]
  do = work in inipp
+ 
+   [   whitespace aplenty   ]
+   these are double = = signs
 
 Querying all these key, value pairs is as easy as calling the *get*
 method on the *inipp::inifile* object::
@@ -72,20 +82,23 @@ method on the *inipp::inifile* object::
            << std::endl
            << "inipp: " << cfile.get("inipp")
            << std::endl
-           << "rule the world / use: " << cfile.get("rule the world",
-                                                    "use lolcats")
+           << "rule the world / use: "
+                  << cfile.get("rule the world", "use lolcats")
            << std::endl
-           << sp3c14|_ c#4r4c73r2 / do: "
-                                  << cfile.get("sp3c14|_ c#4r4c73r2", "do")
+           << "sp3c14|_ c#4r4c73r2 / do: "
+                  << cfile.get("sp3c14|_ c#4r4c73r2", "do")
+           << std::endl
+           << "whitespace aplenty / these are double: "
+                  << cfile.get("whitespace aplenty", "these are double")
            << std::endl;
 
-Changelog
-=========
+This will print the following five lines to stdout::
 
-v0.1
-----
-* The very first version.
-           
+ everything: borked
+ inipp: may not be borked
+ rule the world / use: en masse
+ sp3c14|_ c#4r4c73r2 / do: work in inipp
+ whitespace aplenty / these are double: = signs
 
 ..
    Local Variables:
