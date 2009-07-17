@@ -37,7 +37,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 namespace inipp
 {
   
-  std::string __version__ = "0.1";
+  std::string __version__ = "0.2";
 
   class unknown_entry_error : public std::runtime_error
   {
@@ -74,6 +74,11 @@ namespace inipp
       inifile(std::ifstream& infile);
       std::string get(const std::string& section, const std::string& key);
       std::string get(const std::string& key);
+
+      std::string dget(const std::string& section, const std::string& key,
+                       const std::string& default_value);
+      std::string dget(const std::string& key,
+                       const std::string& default_value);
 
     protected:
       std::map<std::string,std::map<std::string,std::string> > _sections;
@@ -144,6 +149,28 @@ namespace inipp
     
     return this->_defaultsection[key];
   };
+
+  std::string inifile::dget(const std::string& section,
+                            const std::string& key,
+                            const std::string& default_value) {
+    try {
+      return this->get(section, key);
+    }
+    catch(unknown_section_error& ex) { /* ignore */ }
+    catch(unknown_entry_error& ex) { /* ignore */ }
+    
+    return default_value;
+  }
+
+  std::string inifile::dget(const std::string& key,
+                            const std::string& default_value) {
+    try {
+      return this->get(key);
+    }
+    catch(unknown_entry_error& ex) { /* ignore */ }
+    
+    return default_value;
+  }
   
   inline std::string inifile::_trim(const std::string& str) {
     size_t startpos = str.find_first_not_of(" \t");

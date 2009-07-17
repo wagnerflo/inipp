@@ -11,14 +11,23 @@ BOOST_AUTO_TEST_CASE( sunshine )
   // correct queries
   BOOST_REQUIRE_EQUAL(cfile.get("everything"),
                       "borked");
-  BOOST_REQUIRE_EQUAL(cfile.get("inipp"),
+  BOOST_REQUIRE_EQUAL(cfile.dget("inipp", "is buggy as hell"),
                       "may not be borked");
+  BOOST_REQUIRE_EQUAL(cfile.dget("inivisible entry", "is invisible"),
+                      "is invisible");
   BOOST_REQUIRE_EQUAL(cfile.get("rule the world", "use lolcats"),
                       "en masse");
   BOOST_REQUIRE_EQUAL(cfile.get("sp3c14|_ c#4r4c73r2", "do"),
                       "work in inipp");
+  BOOST_REQUIRE_EQUAL(cfile.dget("sp3c14|_ c#4r4c73r2", "do", "not work"),
+                      "work in inipp");
+  BOOST_REQUIRE_EQUAL(cfile.dget("sp3c14|_ c#4r4c73r2", "are", "funky"),
+                      "funky");
   BOOST_REQUIRE_EQUAL(cfile.get("whitespace aplenty", "these are double"),
                       "= signs");
+  BOOST_REQUIRE_EQUAL(cfile.dget("no section", "without an entry",
+                                 "and no value"),
+                      "and no value");
 
   // queries supposed to throw up
   BOOST_REQUIRE_THROW(cfile.get("nothing"), inipp::unknown_entry_error);

@@ -3,7 +3,7 @@ inipp
 =====
 :Homepage: http://projects.wagner-flo.net/inipp/
 :Author: Florian Wagner <florian@wagner-flo.net>
-:Release: v0.1
+:Release: v0.2
 :License: BSD 2-clause
 
 About
@@ -75,8 +75,10 @@ following content::
    [   whitespace aplenty   ]
    these are double = = signs
 
-Querying all these key, value pairs is as easy as calling the *get*
-method on the *inipp::inifile* object::
+Querying all these key, value pairs is as easy as calling the
+*get(std::string& key)* or
+*get(std::string& section, std::string& key)* method on the
+*inipp::inifile* object::
 
  std::cout << "everything: " << cfile.get("everything")
            << std::endl
@@ -99,6 +101,16 @@ This will print the following five lines to stdout::
  rule the world / use: en masse
  sp3c14|_ c#4r4c73r2 / do: work in inipp
  whitespace aplenty / these are double: = signs
+
+When querying non existant entries or non exisistant sections with
+the *inipp::inifile::get* methods an *inipp::unknown_entry_error*
+or respectivly *inipp::unknown_section_error* exception will be
+thrown.
+
+The two *inipp::inifile::dget* methods are an alternative to this
+behaviour. These allow an additional parameter
+*std::string default_value* and return this parameter instead of
+throwing exceptions.
 
 ..
    Local Variables:
