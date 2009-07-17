@@ -1,9 +1,13 @@
+.. |VER| replace:: 0.2
+.. |DOWN| replace:: http://projects.wagner-flo.net/inipp/inipp-0.2.tar.gz
+
+
 =====
 inipp
 =====
 :Homepage: http://projects.wagner-flo.net/inipp/
 :Author: Florian Wagner <florian@wagner-flo.net>
-:Release: v0.2
+:Release: v\ |VER|
 :License: BSD 2-clause
 
 About
@@ -14,8 +18,13 @@ is intended for tools that need to read and parse (but not write) ini
 style files and do not want to add a dependency to one of the more
 advanced config parsing libraries.
 
+
 Installation and Dependencies
 =============================
+A tarball of the current version |VER| can be downloaded at |DOWN|.
+The lastest code is maintained in a Bazaar repository at
+http://bazaar.launchpad.net/~wagnerflo/inipp/inipp.trunk/.
+
 Copy the ``inipp.hh`` header to a directory of your choice within the
 sources of the software you intend to use inipp with. Compilation
 requires a C++ standard library with basic stream and string support
@@ -111,6 +120,16 @@ The two *inipp::inifile::dget* methods are an alternative to this
 behaviour. These allow an additional parameter
 *std::string default_value* and return this parameter instead of
 throwing exceptions.
+
+Changelog
+=========
+
+- **v0.2:** Extended *inipp::inifile* with two *dget* methods which take
+  an additional default_value parameter and return this parameter instead
+  of throwing *inipp::unknown_entry_error* and
+  *inipp::unknown_entry_error*.
+  
+- **v0.1:*** Initial release with basic functionallity.
 
 ..
    Local Variables:
