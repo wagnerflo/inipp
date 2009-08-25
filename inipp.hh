@@ -36,8 +36,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 namespace inipp
 {
-  
-  std::string __version__ = "0.2";
+  std::string __version__ = "0.3";
 
   class unknown_entry_error : public std::runtime_error
   {
