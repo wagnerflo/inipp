@@ -45,7 +45,7 @@ and pass it an *std::ifstream* object::
  inipp::inifile cfile(cfstream);
 
 The constructor of *inipp::inifile* will read the given stream line
-by line and parse it contents according to a set of rules:
+by line and parse its contents according to a set of rules:
 
 1. Empty lines, lines with only whitespace in them and lines starting a
    ``#`` character (and possibly whitespace before that) are completely
@@ -77,6 +77,7 @@ following content::
  
  [rule the world]
  use lolcats = en masse
+ but do not = fall over laughing
  
  [sp3c14|_ c#4r4c73r2]
  do = work in inipp
@@ -96,6 +97,9 @@ Querying all these key, value pairs is as easy as calling the
            << "rule the world / use lolcats: "
                   << cfile.get("rule the world", "use lolcats")
            << std::endl
+           << "rule the world / but do not: "
+                  << cfile.get("rule the world", "but do not")
+           << std::endl
            << "sp3c14|_ c#4r4c73r2 / do: "
                   << cfile.get("sp3c14|_ c#4r4c73r2", "do")
            << std::endl
@@ -108,6 +112,7 @@ This will print the following five lines to stdout::
  everything: borked
  inipp: may not be borked
  rule the world / use lolcats: en masse
+ rule the world / but do not: fall over laughing
  sp3c14|_ c#4r4c73r2 / do: work in inipp
  whitespace aplenty / these are double: = signs
 
@@ -120,6 +125,20 @@ The two *inipp::inifile::dget* methods are an alternative to this
 behaviour. These allow an additional parameter
 *const std::string& default_value* and return this parameter instead of
 throwing exceptions.
+
+For quering multiple values within one section there is a shortcut
+to repeatedly typing the sections name: The
+*inipp::inifile::section(const std::string& sectioname)*
+method returns a *inipp::inisection* object which acts as a wrapper
+around a single section. It provides *get(const std::string& key)*
+and *dget(const std::string& key, const std::string& default_value)*
+methods which work exactly like their counterparts on *inipp::inifile*::
+
+ inisection rule = cfile.section("rule the world");
+ std::cout << "rule the world / use lolcats: " << rule.get("use lolcats")
+           << std::endl
+           << "rule the world / but do not: " << rule.get("but do not")
+           << std::endl; 
 
 Changelog
 =========

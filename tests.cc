@@ -3,7 +3,7 @@
 
 #include <inipp.hh>
 
-BOOST_AUTO_TEST_CASE( sunshine )
+BOOST_AUTO_TEST_CASE( sunshine_inifile )
 {
   std::ifstream cstream("tests-sunshine.conf");
   inipp::inifile cfile(cstream);
@@ -17,6 +17,8 @@ BOOST_AUTO_TEST_CASE( sunshine )
                       "is invisible");
   BOOST_REQUIRE_EQUAL(cfile.get("rule the world", "use lolcats"),
                       "en masse");
+  BOOST_REQUIRE_EQUAL(cfile.get("rule the world", "but do not"),
+                      "fall over laughing");
   BOOST_REQUIRE_EQUAL(cfile.get("sp3c14|_ c#4r4c73r2", "do"),
                       "work in inipp");
   BOOST_REQUIRE_EQUAL(cfile.dget("sp3c14|_ c#4r4c73r2", "do", "not work"),
@@ -36,6 +38,25 @@ BOOST_AUTO_TEST_CASE( sunshine )
   BOOST_REQUIRE_THROW(cfile.get("normal characters", "work in inipp"),
                       inipp::unknown_section_error);
   BOOST_REQUIRE_THROW(cfile.get("everything = borked"),
+                      inipp::unknown_entry_error);
+}
+
+BOOST_AUTO_TEST_CASE( sunshine_inisection )
+{
+  std::ifstream cstream("tests-sunshine.conf");
+  inipp::inifile cfile(cstream);
+  inipp::inisection rule = cfile.section("rule the world");
+
+  // correct queries
+  BOOST_REQUIRE_EQUAL(rule.get("use lolcats"), "en masse");
+  BOOST_REQUIRE_EQUAL(rule.get("but do not"), "fall over laughing");
+  BOOST_REQUIRE_EQUAL(rule.dget("use of force", "is a bad idea"),
+                      "is a bad idea");
+
+  // queries supposed to throw up
+  BOOST_REQUIRE_THROW(cfile.section("nosection"),
+                      inipp::unknown_section_error);
+  BOOST_REQUIRE_THROW(rule.get("use of force"),
                       inipp::unknown_entry_error);
 }
 

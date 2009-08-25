@@ -70,6 +70,25 @@ namespace inipp
       { /* empty */ };
   };
 
+  class inifile;
+  class inisection;
+
+  class inisection
+  {
+    friend class inifile;
+    
+    public:
+      std::string get(const std::string& key);
+      std::string dget(const std::string& key,
+                       const std::string& default_value);
+
+    protected:
+      inisection(const std::string& sectionname, inifile& ini);
+
+      inifile& _ini;
+      std::string _sectionname;
+  };
+
   class inifile
   {
     public:
@@ -83,6 +102,7 @@ namespace inipp
                        const std::string& default_value);
       std::string dget(const std::string& key,
                        const std::string& default_value);
+      inisection section(const std::string& sectionname);
 
     protected:
       std::map<std::string,std::map<std::string,std::string> > _sections;
@@ -175,6 +195,14 @@ namespace inipp
     
     return default_value;
   }
+
+  inisection inifile::section(const std::string& sectionname) {
+    if(!this->_sections.count(sectionname)) {
+      throw unknown_section_error(sectionname);
+    }
+    
+    return inisection(sectionname, *this);
+  };
   
   inline std::string inifile::_trim(const std::string& str) {
     size_t startpos = str.find_first_not_of(" \t");
@@ -203,6 +231,20 @@ namespace inipp
     return true;
   }
 
+  inisection::inisection(const std::string& sectionname, inifile& ini)
+    : _sectionname(sectionname),
+      _ini(ini) {
+    /* empty */
+  }
+
+  inline std::string inisection::get(const std::string& key) {
+    return this->_ini.get(this->_sectionname, key);
+  }
+  
+  inline std::string inisection::dget(const std::string& key,
+                                      const std::string& default_value) {
+    return this->_ini.dget(this->_sectionname, key, default_value);
+  }
 }
 
 #endif /* INIPP_HH */
