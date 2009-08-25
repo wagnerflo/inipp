@@ -46,17 +46,19 @@ namespace inipp
         : std::runtime_error("Unknown sectionless entry '" + key + "'.")
       { /* empty */ };
 
-      unknown_entry_error(const std::string& key, const std::string& section)
+      unknown_entry_error(const std::string& key,
+                          const std::string& sectionname)
         : std::runtime_error("Unknown entry '" + key + "' in section '" +
-                             section + "'.")
+                             sectionname + "'.")
       { /* empty */ };
   };
   
   class unknown_section_error : public std::runtime_error
   {
     public:
-      unknown_section_error(const std::string& section) 
-        : std::runtime_error("Unknown section '" + section + "' requested.")
+      unknown_section_error(const std::string& sectionname)
+        : std::runtime_error("Unknown section '" + sectionname +
+                             "' requested.")
       { /* empty */ };
   };
 
@@ -72,10 +74,12 @@ namespace inipp
   {
     public:
       inifile(std::ifstream& infile);
-      std::string get(const std::string& section, const std::string& key);
+      std::string get(const std::string& sectionname,
+                      const std::string& key);
       std::string get(const std::string& key);
 
-      std::string dget(const std::string& section, const std::string& key,
+      std::string dget(const std::string& sectionname,
+                       const std::string& key,
                        const std::string& default_value);
       std::string dget(const std::string& key,
                        const std::string& default_value);
@@ -129,17 +133,17 @@ namespace inipp
     }
   }
 
-  std::string inifile::get(const std::string& section,
+  std::string inifile::get(const std::string& sectionname,
                            const std::string& key) {
-    if(!this->_sections.count(section)) {
-      throw unknown_section_error(section);
+    if(!this->_sections.count(sectionname)) {
+      throw unknown_section_error(sectionname);
     }
 
-    if(!this->_sections[section].count(key)) {
-      throw unknown_entry_error(section, key);
+    if(!this->_sections[sectionname].count(key)) {
+      throw unknown_entry_error(sectionname, key);
     }
 
-    return this->_sections[section][key];
+    return this->_sections[sectionname][key];
   }
 
   std::string inifile::get(const std::string& key) {
@@ -150,11 +154,11 @@ namespace inipp
     return this->_defaultsection[key];
   };
 
-  std::string inifile::dget(const std::string& section,
+  std::string inifile::dget(const std::string& sectionname,
                             const std::string& key,
                             const std::string& default_value) {
     try {
-      return this->get(section, key);
+      return this->get(sectionname, key);
     }
     catch(unknown_section_error& ex) { /* ignore */ }
     catch(unknown_entry_error& ex) { /* ignore */ }

@@ -86,7 +86,7 @@ following content::
 
 Querying all these key, value pairs is as easy as calling the
 *get(const std::string& key)* or
-*get(const std::string& section, conststd::string& key)* method on the
+*get(const std::string& sectionname, conststd::string& key)* method on the
 *inipp::inifile* object::
 
  std::cout << "everything: " << cfile.get("everything")
