@@ -36,7 +36,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 namespace inipp
 {
-  std::string __version__ = "0.3";
+  std::string __version__ = "0.4";
 
   class unknown_entry_error : public std::runtime_error
   {
@@ -84,8 +84,8 @@ namespace inipp
     protected:
       inisection(const std::string& sectionname, inifile& ini);
 
-      inifile& _ini;
       std::string _sectionname;
+      inifile& _ini;
   };
 
   class inifile
