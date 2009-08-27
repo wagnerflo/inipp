@@ -36,7 +36,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 namespace inipp
 {
-  std::string __version__ = "0.4";
+  std::string __version__ = "0.5";
 
   class unknown_entry_error : public std::runtime_error
   {
@@ -77,15 +77,15 @@ namespace inipp
     friend class inifile;
     
     public:
-      std::string get(const std::string& key);
+      std::string get(const std::string& key) const;
       std::string dget(const std::string& key,
-                       const std::string& default_value);
+                       const std::string& default_value) const;
 
     protected:
-      inisection(const std::string& sectionname, inifile& ini);
+      inisection(const std::string& sectionname, const inifile& ini);
 
-      std::string _sectionname;
-      inifile& _ini;
+      const std::string _sectionname;
+      const inifile& _ini;
   };
 
   class inifile
@@ -93,15 +93,15 @@ namespace inipp
     public:
       inifile(std::ifstream& infile);
       std::string get(const std::string& sectionname,
-                      const std::string& key);
-      std::string get(const std::string& key);
+                      const std::string& key) const;
+      std::string get(const std::string& key) const;
 
       std::string dget(const std::string& sectionname,
                        const std::string& key,
-                       const std::string& default_value);
+                       const std::string& default_value) const;
       std::string dget(const std::string& key,
-                       const std::string& default_value);
-      inisection section(const std::string& sectionname);
+                       const std::string& default_value) const;
+      inisection section(const std::string& sectionname) const;
 
     protected:
       std::map<std::string,std::map<std::string,std::string> > _sections;
@@ -153,29 +153,29 @@ namespace inipp
   }
 
   std::string inifile::get(const std::string& sectionname,
-                           const std::string& key) {
+                           const std::string& key) const {
     if(!this->_sections.count(sectionname)) {
       throw unknown_section_error(sectionname);
     }
 
-    if(!this->_sections[sectionname].count(key)) {
+    if(!this->_sections.find(sectionname)->second.count(key)) {
       throw unknown_entry_error(sectionname, key);
     }
 
-    return this->_sections[sectionname][key];
+    return this->_sections.find(sectionname)->second.find(key)->second;
   }
 
-  std::string inifile::get(const std::string& key) {
+  std::string inifile::get(const std::string& key) const {
     if(!this->_defaultsection.count(key)) {
       throw unknown_entry_error(key);
     }
     
-    return this->_defaultsection[key];
+    return this->_defaultsection.find(key)->second;
   };
 
   std::string inifile::dget(const std::string& sectionname,
                             const std::string& key,
-                            const std::string& default_value) {
+                            const std::string& default_value) const {
     try {
       return this->get(sectionname, key);
     }
@@ -186,7 +186,7 @@ namespace inipp
   }
 
   std::string inifile::dget(const std::string& key,
-                            const std::string& default_value) {
+                            const std::string& default_value) const {
     try {
       return this->get(key);
     }
@@ -195,7 +195,7 @@ namespace inipp
     return default_value;
   }
 
-  inisection inifile::section(const std::string& sectionname) {
+  inisection inifile::section(const std::string& sectionname) const {
     if(!this->_sections.count(sectionname)) {
       throw unknown_section_error(sectionname);
     }
@@ -230,19 +230,19 @@ namespace inipp
     return true;
   }
 
-  inisection::inisection(const std::string& sectionname, inifile& ini)
+  inisection::inisection(const std::string& sectionname, const inifile& ini)
     : _sectionname(sectionname),
       _ini(ini) {
     /* empty */
   }
 
-  inline std::string inisection::get(const std::string& key) {
+  inline std::string inisection::get(const std::string& key) const {
     return this->_ini.get(this->_sectionname, key);
   }
   
   inline std::string inisection::dget(const std::string& key,
-                                      const std::string& default_value) {
-    return this->_ini.dget(this->_sectionname, key, default_value);
+                                      const std::string& default_val) const {
+    return this->_ini.dget(this->_sectionname, key, default_val);
   }
 }
 

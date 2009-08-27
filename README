@@ -1,5 +1,5 @@
-.. |VER| replace:: 0.4
-.. |DOWN| replace:: http://launchpad.net/inipp/trunk/release-0.4/+download/inipp-0.4.tar.gz
+.. |VER| replace:: 0.5
+.. |DOWN| replace:: http://launchpad.net/inipp/trunk/release-0.5/+download/inipp-0.5.tar.gz
 
 
 =====
@@ -142,6 +142,8 @@ methods which work exactly like their counterparts on *inipp::inifile*::
 
 Changelog
 =========
+- **v0.5:** Make the methods get, dget, section constant correct.
+
 - **v0.4:** Fix a bug only occuring with -Wall -Werror on gcc.
 
 - **v0.3:** Added an *inipp::inisection* class and assorted methods: It
