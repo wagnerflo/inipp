@@ -29,6 +29,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 #ifndef INIPP_HH
 #define INIPP_HH
 
+#define INIPP_VERSION "0.6"
+
 #include <string>
 #include <map>
 #include <fstream>
@@ -36,17 +38,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 namespace inipp
 {
-  std::string __version__ = "0.5";
-
   class unknown_entry_error : public std::runtime_error
   {
     public:
-      unknown_entry_error(const std::string& key)
+      inline unknown_entry_error(const std::string& key)
         : std::runtime_error("Unknown sectionless entry '" + key + "'.")
       { /* empty */ };
 
-      unknown_entry_error(const std::string& key,
-                          const std::string& sectionname)
+      inline unknown_entry_error(const std::string& key,
+                                 const std::string& sectionname)
         : std::runtime_error("Unknown entry '" + key + "' in section '" +
                              sectionname + "'.")
       { /* empty */ };
@@ -55,7 +55,7 @@ namespace inipp
   class unknown_section_error : public std::runtime_error
   {
     public:
-      unknown_section_error(const std::string& sectionname)
+      inline unknown_section_error(const std::string& sectionname)
         : std::runtime_error("Unknown section '" + sectionname +
                              "' requested.")
       { /* empty */ };
@@ -64,7 +64,7 @@ namespace inipp
   class syntax_error : public std::runtime_error
   {
     public:
-      syntax_error(const std::string& msg) 
+      inline syntax_error(const std::string& msg) 
         : std::runtime_error(msg)
       { /* empty */ };
   };
@@ -77,12 +77,12 @@ namespace inipp
     friend class inifile;
     
     public:
-      std::string get(const std::string& key) const;
-      std::string dget(const std::string& key,
-                       const std::string& default_value) const;
+      inline std::string get(const std::string& key) const;
+      inline std::string dget(const std::string& key,
+                              const std::string& default_value) const;
 
     protected:
-      inisection(const std::string& sectionname, const inifile& ini);
+      inline inisection(const std::string& sectionname, const inifile& ini);
 
       const std::string _sectionname;
       const inifile& _ini;
@@ -91,25 +91,25 @@ namespace inipp
   class inifile
   {
     public:
-      inifile(std::ifstream& infile);
-      std::string get(const std::string& sectionname,
-                      const std::string& key) const;
-      std::string get(const std::string& key) const;
+      inline inifile(std::ifstream& infile);
+      inline std::string get(const std::string& sectionname,
+                             const std::string& key) const;
+      inline std::string get(const std::string& key) const;
 
-      std::string dget(const std::string& sectionname,
-                       const std::string& key,
-                       const std::string& default_value) const;
-      std::string dget(const std::string& key,
-                       const std::string& default_value) const;
-      inisection section(const std::string& sectionname) const;
+      inline std::string dget(const std::string& sectionname,
+                              const std::string& key,
+                              const std::string& default_value) const;
+      inline std::string dget(const std::string& key,
+                              const std::string& default_value) const;
+      inline inisection section(const std::string& sectionname) const;
 
     protected:
       std::map<std::string,std::map<std::string,std::string> > _sections;
       std::map<std::string,std::string> _defaultsection;
       
-      std::string _trim(const std::string& str);
-      bool _split(const std::string& in, const std::string& sep,
-                  std::string& first, std::string& second);
+      inline std::string _trim(const std::string& str);
+      inline bool _split(const std::string& in, const std::string& sep,
+                         std::string& first, std::string& second);
 
   };
 
