@@ -47,9 +47,9 @@ and pass it an *std::ifstream* object::
 The constructor of *inipp::inifile* will read the given stream line
 by line and parse its contents according to a set of rules:
 
-1. Empty lines, lines with only whitespace in them and lines starting a
-   ``#`` character (and possibly whitespace before that) are completely
-   ignored.
+1. Empty lines, lines with only whitespace in them and lines starting
+   with a ``#`` character (and possibly whitespace before that) are
+   completely ignored.
 
 2. Lines starting with a ``[`` character and ending with a ``]``
    (ignoring whitespace before and after) are taken as starting
