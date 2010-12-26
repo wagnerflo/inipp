@@ -1,5 +1,5 @@
-.. |VER| replace:: 0.6
-.. |DOWN| replace:: http://launchpad.net/inipp/trunk/release-0.6/+download/inipp-0.6.tar.gz
+.. |VER| replace:: 0.7
+.. |DOWN| replace:: http://launchpad.net/inipp/trunk/release-0.7/+download/inipp-0.7.tar.gz
 
 
 =====
@@ -64,8 +64,8 @@ by line and parse its contents according to a set of rules:
    found in the line, thus all following equal signs end up in the
    value part.
 
-4. Lines matching non of the previous conditions make *inipp*
-   throw a *initpp::syntax_error*.
+4. Lines matching none of the previous conditions make *inipp*
+   throw a *inipp::syntax_error*.
 
 Assuming a configuration file named ``tests-sunshine.conf`` with the
 following content::
@@ -87,8 +87,8 @@ following content::
 
 Querying all these key, value pairs is as easy as calling the
 *get(const std::string& key)* or
-*get(const std::string& sectionname, conststd::string& key)* method on the
-*inipp::inifile* object::
+*get(const std::string& sectionname, const std::string& key)* method on
+the *inipp::inifile* object::
 
  std::cout << "everything: " << cfile.get("everything")
            << std::endl
@@ -126,7 +126,7 @@ behaviour. These allow an additional parameter
 *const std::string& default_value* and return this parameter instead of
 throwing exceptions.
 
-For quering multiple values within one section there is a shortcut
+For querying multiple values within one section there is a shortcut
 to repeatedly typing the sections name: The
 *inipp::inifile::section(const std::string& sectioname)*
 method returns a *inipp::inisection* object which acts as a wrapper
@@ -142,6 +142,8 @@ methods which work exactly like their counterparts on *inipp::inifile*::
 
 Changelog
 =========
+- **v0.7:** Fix typos in the README.
+
 - **v0.6:** All methods are now inline to allow correct linkage in
   projects using inipp from multiple object files. Also turn
   *inipp::__version__* variable into *INIPP_VERSION* define.
