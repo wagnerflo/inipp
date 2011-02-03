@@ -4,16 +4,20 @@
 .. |DOWN| replace:: http://bitbucket.org/wagnerflo/inipp/downloads/
 
 
-=====
-inipp
-=====
-:Homepage: |HOME|
-:Author: Florian Wagner <florian@wagner-flo.net>
-:Release: v\ |VER|
-:License: BSD 2-clause (see COPYING)
-
 About
 =====
+Homepage
+  |HOME|
+
+Author
+  Florian Wagner <florian@wagner-flo.net>
+
+Release
+  v\ |VER|
+
+License
+  BSD 2-clause (see COPYING)
+
 inipp is a minimalistic ini style config parser for C++. It is contained
 in a single header file which can be added to a programs source code. It
 is intended for tools that need to read and parse (but not write) ini
