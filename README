@@ -1,11 +1,13 @@
+.. -*- restructuredtext -*-
 .. |VER| replace:: 0.7
-.. |DOWN| replace:: http://launchpad.net/inipp/trunk/release-0.7/+download/inipp-0.7.tar.gz
+.. |HOME| replace:: https://bitbucket.org/wagnerflo/inipp/
+.. |DOWN| replace:: http://bitbucket.org/wagnerflo/inipp/downloads/
 
 
 =====
 inipp
 =====
-:Homepage: http://projects.wagner-flo.net/inipp/
+:Homepage: |HOME|
 :Author: Florian Wagner <florian@wagner-flo.net>
 :Release: v\ |VER|
 :License: BSD 2-clause
@@ -21,9 +23,9 @@ advanced config parsing libraries.
 
 Installation and Dependencies
 =============================
-A tarball of the current version |VER| can be downloaded at |DOWN|.
-The lastest code is maintained in a Bazaar repository at
-http://bazaar.launchpad.net/~wagnerflo/inipp/inipp.trunk/.
+A tarball of the current version |VER| can be downloaded at |DOWN|. MD5
+checksum and GnuPG signature are available at the same spot. The lastest
+code is maintained in a Mercurial repository at |HOME|.
 
 Copy the ``inipp.hh`` header to a directory of your choice within the
 sources of the software you intend to use inipp with. Compilation
