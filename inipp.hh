@@ -51,7 +51,7 @@ namespace inipp
                              sectionname + "'.")
       { /* empty */ };
   };
-  
+
   class unknown_section_error : public std::runtime_error
   {
     public:
@@ -64,7 +64,7 @@ namespace inipp
   class syntax_error : public std::runtime_error
   {
     public:
-      inline syntax_error(const std::string& msg) 
+      inline syntax_error(const std::string& msg)
         : std::runtime_error(msg)
       { /* empty */ };
   };
@@ -75,7 +75,7 @@ namespace inipp
   class inisection
   {
     friend class inifile;
-    
+
     public:
       inline std::string get(const std::string& key) const;
       inline std::string dget(const std::string& key,
@@ -106,7 +106,7 @@ namespace inipp
     protected:
       std::map<std::string,std::map<std::string,std::string> > _sections;
       std::map<std::string,std::string> _defaultsection;
-      
+
       inline std::string _trim(const std::string& str);
       inline bool _split(const std::string& in, const std::string& sep,
                          std::string& first, std::string& second);
@@ -120,7 +120,7 @@ namespace inipp
     while(std::getline(infile, line)) {
       // trim line
       line = this->_trim(line);
-          
+
       // ignore empty lines and comments
       if(line == "" || line[0] == '#') {
         continue;
@@ -132,12 +132,12 @@ namespace inipp
           throw syntax_error("The section '" + line +
                              "' is missing a closing bracket.");
         }
-            
+
         line = this->_trim(line.substr(1, line.size() - 2));
         cursec = &this->_sections[line];
         continue;
       }
-          
+
       // entry: split by "="
       std::string key;
       std::string value;
@@ -146,7 +146,7 @@ namespace inipp
       if(!this->_split(line, "=", key, value)) {
         throw syntax_error("The line '" + line + "' is undecidable.");
       }
-          
+
       // then trim and set
       (*cursec)[this->_trim(key)] = this->_trim(value);
     }
@@ -169,7 +169,7 @@ namespace inipp
     if(!this->_defaultsection.count(key)) {
       throw unknown_entry_error(key);
     }
-    
+
     return this->_defaultsection.find(key)->second;
   };
 
@@ -181,7 +181,7 @@ namespace inipp
     }
     catch(unknown_section_error& ex) { /* ignore */ }
     catch(unknown_entry_error& ex) { /* ignore */ }
-    
+
     return default_value;
   }
 
@@ -191,7 +191,7 @@ namespace inipp
       return this->get(key);
     }
     catch(unknown_entry_error& ex) { /* ignore */ }
-    
+
     return default_value;
   }
 
@@ -199,19 +199,19 @@ namespace inipp
     if(!this->_sections.count(sectionname)) {
       throw unknown_section_error(sectionname);
     }
-    
+
     return inisection(sectionname, *this);
   };
-  
+
   inline std::string inifile::_trim(const std::string& str) {
     size_t startpos = str.find_first_not_of(" \t");
     size_t endpos = str.find_last_not_of(" \t");
-    
+
     // only whitespace, return empty line
     if(startpos == std::string::npos || endpos == std::string::npos) {
       return "";
     }
-    
+
     // trim leading and trailing whitespace
     return str.substr(startpos, endpos - startpos + 1);
   }
@@ -219,7 +219,7 @@ namespace inipp
   inline bool inifile::_split(const std::string& in, const std::string& sep,
                               std::string& first, std::string& second) {
     size_t eqpos = in.find(sep);
-    
+
     if(eqpos == std::string::npos) {
       return false;
     }
@@ -239,7 +239,7 @@ namespace inipp
   inline std::string inisection::get(const std::string& key) const {
     return this->_ini.get(this->_sectionname, key);
   }
-  
+
   inline std::string inisection::dget(const std::string& key,
                                       const std::string& default_val) const {
     return this->_ini.dget(this->_sectionname, key, default_val);

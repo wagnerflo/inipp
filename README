@@ -138,7 +138,7 @@ methods which work exactly like their counterparts on *inipp::inifile*::
  std::cout << "rule the world / use lolcats: " << rule.get("use lolcats")
            << std::endl
            << "rule the world / but do not: " << rule.get("but do not")
-           << std::endl; 
+           << std::endl;
 
 Changelog
 =========
@@ -160,7 +160,7 @@ Changelog
   an additional default_value parameter and return this parameter instead
   of throwing *inipp::unknown_entry_error* and
   *inipp::unknown_entry_error*.
-  
+
 - **v0.1:*** Initial release with basic functionallity.
 
 ..

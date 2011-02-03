@@ -64,7 +64,7 @@ BOOST_AUTO_TEST_CASE( malformed )
 {
   // we use a single ifstream
   std::ifstream cstream("tests-malformed.conf");
-  
+
   // The test config has two lines with distinct errors on them. So we
   // construct a inipp::inifile twice without rewinding the ifstream
   // in between. Both times an error should be thrown.
