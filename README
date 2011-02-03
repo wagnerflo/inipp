@@ -161,7 +161,7 @@ Changelog
   of throwing *inipp::unknown_entry_error* and
   *inipp::unknown_entry_error*.
 
-- **v0.1:*** Initial release with basic functionallity.
+- **v0.1:** Initial release with basic functionallity.
 
 ..
    Local Variables:
