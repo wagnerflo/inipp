@@ -1,7 +1,7 @@
 .. -*- restructuredtext -*-
 .. |VER| replace:: 0.7
-.. |HOME| replace:: https://bitbucket.org/wagnerflo/inipp/
-.. |DOWN| replace:: http://bitbucket.org/wagnerflo/inipp/downloads/
+.. |HOME| replace:: https://github.com/wagnerflo/inipp
+.. |DOWN| replace:: https://github.com/wagnerflo/inipp/releases
 
 
 About
@@ -29,7 +29,7 @@ Installation and Dependencies
 =============================
 A tarball of the current version |VER| can be downloaded at |DOWN|. MD5
 checksum and GnuPG signature are available at the same spot. The lastest
-code is maintained in a Mercurial repository at |HOME|.
+code is maintained in a Git repository at |HOME|.
 
 Copy the ``inipp.hh`` header to a directory of your choice within the
 sources of the software you intend to use inipp with. Compilation
