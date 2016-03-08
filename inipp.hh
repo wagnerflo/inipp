@@ -42,7 +42,7 @@ namespace inipp
   {
     public:
       inline unknown_entry_error(const std::string& key)
-        : std::runtime_error("Unknown sectionless entry '" + key + "'.")
+        : std::runtime_error("Unknown entry '" + key + "'.")
       { /* empty */ };
 
       inline unknown_entry_error(const std::string& key,
@@ -56,8 +56,7 @@ namespace inipp
   {
     public:
       inline unknown_section_error(const std::string& sectionname)
-        : std::runtime_error("Unknown section '" + sectionname +
-                             "' requested.")
+        : std::runtime_error("Unknown section '" + sectionname + "'.")
       { /* empty */ };
   };
 
