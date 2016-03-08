@@ -70,7 +70,8 @@ namespace inipp
 
   namespace _private
   {
-    inline std::string trim(const std::string& str);
+    inline std::string trim(const std::string& str,
+                            const std::string& whitespace = " \t\n\r\f\v");
     inline bool split(const std::string& in, const std::string& sep,
                       std::string& first, std::string& second);
   }
@@ -204,9 +205,10 @@ namespace inipp
     return inisection(sectionname, *this);
   };
 
-  inline std::string _private::trim(const std::string& str) {
-    size_t startpos = str.find_first_not_of(" \t");
-    size_t endpos = str.find_last_not_of(" \t");
+  inline std::string _private::trim(const std::string& str,
+                                    const std::string& whitespace) {
+    size_t startpos = str.find_first_not_of(whitespace);
+    size_t endpos = str.find_last_not_of(whitespace);
 
     // only whitespace, return empty line
     if(startpos == std::string::npos || endpos == std::string::npos) {
