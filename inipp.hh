@@ -46,17 +46,17 @@ namespace inipp
       { /* empty */ };
 
       inline unknown_entry_error(const std::string& key,
-                                 const std::string& sectionname)
+                                 const std::string& section)
         : std::runtime_error("Unknown entry '" + key + "' in section '" +
-                             sectionname + "'.")
+                             section + "'.")
       { /* empty */ };
   };
 
   class unknown_section_error : public std::runtime_error
   {
     public:
-      inline unknown_section_error(const std::string& sectionname)
-        : std::runtime_error("Unknown section '" + sectionname + "'.")
+      inline unknown_section_error(const std::string& section)
+        : std::runtime_error("Unknown section '" + section + "'.")
       { /* empty */ };
   };
 
@@ -89,9 +89,9 @@ namespace inipp
                               const std::string& default_value) const;
 
     protected:
-      inline inisection(const std::string& sectionname, const inifile& ini);
+      inline inisection(const std::string& section, const inifile& ini);
 
-      const std::string _sectionname;
+      const std::string _section;
       const inifile& _ini;
   };
 
@@ -99,16 +99,16 @@ namespace inipp
   {
     public:
       inline inifile(std::ifstream& infile);
-      inline std::string get(const std::string& sectionname,
+      inline std::string get(const std::string& section,
                              const std::string& key) const;
       inline std::string get(const std::string& key) const;
 
-      inline std::string dget(const std::string& sectionname,
+      inline std::string dget(const std::string& section,
                               const std::string& key,
                               const std::string& default_value) const;
       inline std::string dget(const std::string& key,
                               const std::string& default_value) const;
-      inline inisection section(const std::string& sectionname) const;
+      inline inisection section(const std::string& section) const;
 
     protected:
       std::map<std::string,std::map<std::string,std::string> > _sections;
@@ -154,17 +154,17 @@ namespace inipp
     }
   }
 
-  std::string inifile::get(const std::string& sectionname,
+  std::string inifile::get(const std::string& section,
                            const std::string& key) const {
-    if(!this->_sections.count(sectionname)) {
-      throw unknown_section_error(sectionname);
+    if(!this->_sections.count(section)) {
+      throw unknown_section_error(section);
     }
 
-    if(!this->_sections.find(sectionname)->second.count(key)) {
-      throw unknown_entry_error(sectionname, key);
+    if(!this->_sections.find(section)->second.count(key)) {
+      throw unknown_entry_error(section, key);
     }
 
-    return this->_sections.find(sectionname)->second.find(key)->second;
+    return this->_sections.find(section)->second.find(key)->second;
   }
 
   std::string inifile::get(const std::string& key) const {
@@ -175,11 +175,11 @@ namespace inipp
     return this->_defaultsection.find(key)->second;
   };
 
-  std::string inifile::dget(const std::string& sectionname,
+  std::string inifile::dget(const std::string& section,
                             const std::string& key,
                             const std::string& default_value) const {
     try {
-      return this->get(sectionname, key);
+      return this->get(section, key);
     }
     catch(unknown_section_error& ex) { /* ignore */ }
     catch(unknown_entry_error& ex) { /* ignore */ }
@@ -197,12 +197,12 @@ namespace inipp
     return default_value;
   }
 
-  inisection inifile::section(const std::string& sectionname) const {
-    if(!this->_sections.count(sectionname)) {
-      throw unknown_section_error(sectionname);
+  inisection inifile::section(const std::string& section) const {
+    if(!this->_sections.count(section)) {
+      throw unknown_section_error(section);
     }
 
-    return inisection(sectionname, *this);
+    return inisection(section, *this);
   };
 
   inline std::string _private::trim(const std::string& str,
@@ -233,19 +233,19 @@ namespace inipp
     return true;
   }
 
-  inisection::inisection(const std::string& sectionname, const inifile& ini)
-    : _sectionname(sectionname),
+  inisection::inisection(const std::string& section, const inifile& ini)
+    : _section(section),
       _ini(ini) {
     /* empty */
   }
 
   inline std::string inisection::get(const std::string& key) const {
-    return this->_ini.get(this->_sectionname, key);
+    return this->_ini.get(this->_section, key);
   }
 
   inline std::string inisection::dget(const std::string& key,
                                       const std::string& default_val) const {
-    return this->_ini.dget(this->_sectionname, key, default_val);
+    return this->_ini.dget(this->_section, key, default_val);
   }
 }
 
