@@ -140,17 +140,17 @@ namespace inipp
         continue;
       }
 
-      // entry: split by "="
+      // entry: split by "=", trim and set
       std::string key;
       std::string value;
 
-      // ignore invalid lines
-      if(!_private::split(line, "=", key, value)) {
-        throw syntax_error("The line '" + line + "' is undecidable.");
+      if(_private::split(line, "=", key, value)) {
+        (*cursec)[_private::trim(key)] = _private::trim(value);
+        continue;
       }
 
-      // then trim and set
-      (*cursec)[_private::trim(key)] = _private::trim(value);
+      // throw exception on invalid line
+      throw syntax_error("The line '" + line + "' is invalid.");
     }
   }
 
