@@ -27,9 +27,9 @@ advanced config parsing libraries.
 
 Installation and Dependencies
 =============================
-A tarball of the current version |VER| can be downloaded at |DOWN|. MD5
-checksum and GnuPG signature are available at the same spot. The lastest
-code is maintained in a Git repository at |HOME|.
+A tarball of the current version |VER| can be downloaded at |DOWN|. GnuPG
+signature are available at the same spot. The lastest code is maintained
+in a Git repository at |HOME|.
 
 Copy the ``inipp.hh`` header to a directory of your choice within the
 sources of the software you intend to use inipp with. Compilation
