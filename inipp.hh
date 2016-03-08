@@ -124,7 +124,7 @@ namespace inipp
       line = _private::trim(line);
 
       // ignore empty lines and comments
-      if(line == "" || line[0] == '#') {
+      if(line.empty() || line[0] == '#') {
         continue;
       }
 
@@ -212,7 +212,7 @@ namespace inipp
 
     // only whitespace, return empty line
     if(startpos == std::string::npos || endpos == std::string::npos) {
-      return "";
+      return std::string();
     }
 
     // trim leading and trailing whitespace
