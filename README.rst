@@ -1,5 +1,5 @@
 .. -*- restructuredtext -*-
-.. |VER| replace:: 0.7
+.. |VER| replace:: 1.0
 .. |HOME| replace:: https://github.com/wagnerflo/inipp
 .. |DOWN| replace:: https://github.com/wagnerflo/inipp/releases
 
@@ -148,6 +148,8 @@ methods which work exactly like their counterparts on *inipp::inifile*::
 
 Changelog
 =========
+- **v1.0:** Typos, minimal refactoring and some changes for consistency.
+
 - **v0.7:** Fix typos in the README.
 
 - **v0.6:** All methods are now inline to allow correct linkage in

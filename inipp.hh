@@ -29,7 +29,7 @@
 #ifndef INIPP_HH
 #define INIPP_HH
 
-#define INIPP_VERSION "0.6"
+#define INIPP_VERSION "1.0"
 
 #include <string>
 #include <map>
