@@ -68,6 +68,13 @@ namespace inipp
       { /* empty */ };
   };
 
+  namespace _private
+  {
+    inline std::string trim(const std::string& str);
+    inline bool split(const std::string& in, const std::string& sep,
+                      std::string& first, std::string& second);
+  }
+
   class inifile;
   class inisection;
 
@@ -105,11 +112,6 @@ namespace inipp
     protected:
       std::map<std::string,std::map<std::string,std::string> > _sections;
       std::map<std::string,std::string> _defaultsection;
-
-      inline std::string _trim(const std::string& str);
-      inline bool _split(const std::string& in, const std::string& sep,
-                         std::string& first, std::string& second);
-
   };
 
   inifile::inifile(std::ifstream& infile) {
@@ -118,7 +120,7 @@ namespace inipp
 
     while(std::getline(infile, line)) {
       // trim line
-      line = this->_trim(line);
+      line = _private::trim(line);
 
       // ignore empty lines and comments
       if(line == "" || line[0] == '#') {
@@ -132,7 +134,7 @@ namespace inipp
                              "' is missing a closing bracket.");
         }
 
-        line = this->_trim(line.substr(1, line.size() - 2));
+        line = _private::trim(line.substr(1, line.size() - 2));
         cursec = &this->_sections[line];
         continue;
       }
@@ -142,12 +144,12 @@ namespace inipp
       std::string value;
 
       // ignore invalid lines
-      if(!this->_split(line, "=", key, value)) {
+      if(!_private::split(line, "=", key, value)) {
         throw syntax_error("The line '" + line + "' is undecidable.");
       }
 
       // then trim and set
-      (*cursec)[this->_trim(key)] = this->_trim(value);
+      (*cursec)[_private::trim(key)] = _private::trim(value);
     }
   }
 
@@ -202,7 +204,7 @@ namespace inipp
     return inisection(sectionname, *this);
   };
 
-  inline std::string inifile::_trim(const std::string& str) {
+  inline std::string _private::trim(const std::string& str) {
     size_t startpos = str.find_first_not_of(" \t");
     size_t endpos = str.find_last_not_of(" \t");
 
@@ -215,7 +217,7 @@ namespace inipp
     return str.substr(startpos, endpos - startpos + 1);
   }
 
-  inline bool inifile::_split(const std::string& in, const std::string& sep,
+  inline bool _private::split(const std::string& in, const std::string& sep,
                               std::string& first, std::string& second) {
     size_t eqpos = in.find(sep);
 
