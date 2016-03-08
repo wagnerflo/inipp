@@ -38,6 +38,9 @@
 
 namespace inipp
 {
+  class inifile;
+  class inisection;
+
   class unknown_entry_error : public std::runtime_error
   {
     public:
@@ -67,17 +70,6 @@ namespace inipp
         : std::runtime_error(msg)
       { /* empty */ };
   };
-
-  namespace _private
-  {
-    inline std::string trim(const std::string& str,
-                            const std::string& whitespace = " \t\n\r\f\v");
-    inline bool split(const std::string& in, const std::string& sep,
-                      std::string& first, std::string& second);
-  }
-
-  class inifile;
-  class inisection;
 
   class inisection
   {
@@ -114,6 +106,14 @@ namespace inipp
       std::map<std::string,std::map<std::string,std::string> > _sections;
       std::map<std::string,std::string> _defaultsection;
   };
+
+  namespace _private
+  {
+    inline std::string trim(const std::string& str,
+                            const std::string& whitespace = " \t\n\r\f\v");
+    inline bool split(const std::string& in, const std::string& sep,
+                      std::string& first, std::string& second);
+  }
 
   inifile::inifile(std::ifstream& infile) {
     std::map<std::string,std::string>* cursec = &this->_defaultsection;
@@ -205,6 +205,21 @@ namespace inipp
     return inisection(section, *this);
   };
 
+  inisection::inisection(const std::string& section, const inifile& ini)
+    : _section(section),
+      _ini(ini) {
+    /* empty */
+  }
+
+  inline std::string inisection::get(const std::string& key) const {
+    return this->_ini.get(this->_section, key);
+  }
+
+  inline std::string inisection::dget(const std::string& key,
+                                      const std::string& default_val) const {
+    return this->_ini.dget(this->_section, key, default_val);
+  }
+
   inline std::string _private::trim(const std::string& str,
                                     const std::string& whitespace) {
     size_t startpos = str.find_first_not_of(whitespace);
@@ -231,21 +246,6 @@ namespace inipp
     second = in.substr(eqpos + sep.size(), in.size() - eqpos - sep.size());
 
     return true;
-  }
-
-  inisection::inisection(const std::string& section, const inifile& ini)
-    : _section(section),
-      _ini(ini) {
-    /* empty */
-  }
-
-  inline std::string inisection::get(const std::string& key) const {
-    return this->_ini.get(this->_section, key);
-  }
-
-  inline std::string inisection::dget(const std::string& key,
-                                      const std::string& default_val) const {
-    return this->_ini.dget(this->_section, key, default_val);
   }
 }
 
