@@ -76,6 +76,7 @@ namespace inipp
     friend class inifile;
 
     public:
+      inline std::string name() const;
       inline std::string get(const std::string& key) const;
       inline std::string dget(const std::string& key,
                               const std::string& default_value) const;
@@ -209,6 +210,10 @@ namespace inipp
     : _section(section),
       _ini(ini) {
     /* empty */
+  }
+
+  inline std::string inisection::name() const {
+    return this->_section;
   }
 
   inline std::string inisection::get(const std::string& key) const {
